@@ -1,4 +1,4 @@
-import "./analogsense.js";
+
 
 interface AnalogSenseInput {
     key: string;
