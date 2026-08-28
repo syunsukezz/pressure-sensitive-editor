@@ -7,7 +7,7 @@ import {
   SetAnalogsenseCallback,
 } from "./AnalogsenseHandler.ts";
 import { CaliculatePressure, SetPressureCallback } from "./calcPressure.ts";
-import { mountEditor, insertChar, insertNewline, deleteLast, pressureToWeight } from "./editor.ts";
+import { mountEditor, insertChar, insertNewline, deleteLast, pressureToSize } from "./editor.ts";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 app.innerHTML = `
@@ -47,9 +47,9 @@ SetAnalogsenseCallback((inputs) => {
 SetPressureCallback((code, pressure) => {
   pressureText.textContent = `${pressure.toFixed(2)}N`;
   if (code.length === 1 && /^[A-Z]$/.test(code)) {
-    insertChar(code.toLowerCase(), pressureToWeight(pressure));
+    insertChar(code.toLowerCase(), pressureToSize(pressure));
   } else if (code === "Space") {
-    insertChar(" ", pressureToWeight(pressure));
+    insertChar(" ", pressureToSize(pressure));
   } else if (code === "Backspace") {
     deleteLast();
   } else if (code === "Enter") {
