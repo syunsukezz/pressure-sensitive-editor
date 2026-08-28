@@ -1,20 +1,20 @@
-type Segment = { char: string; weight: number } | { type: "newline" };
+type Segment = { char: string; size: number } | { type: "newline" };
 
 const segments: Segment[] = [];
 let container: HTMLElement | null = null;
 
 // 実測される打鍵圧はおよそ 0.81(下限フォールバック値)〜1.1 程度の狭いレンジに収まるため、
-// 見た目で差が分かるようフォントウェイトの全域(100〜900)に引き伸ばして割り当てる。
+// 見た目で差が分かるよう文字サイズ(rem)の範囲に引き伸ばして割り当てる。
 // 実機での見え方を見ながら調整する前提の値。
 const PRESSURE_MIN = 0.81;
 const PRESSURE_MAX = 1.1;
-const WEIGHT_MIN = 100;
-const WEIGHT_MAX = 900;
+const SIZE_MIN = 1;
+const SIZE_MAX = 3;
 
-function pressureToWeight(pressure: number): number {
+function pressureToSize(pressure: number): number {
   const ratio = (pressure - PRESSURE_MIN) / (PRESSURE_MAX - PRESSURE_MIN);
-  const weight = WEIGHT_MIN + ratio * (WEIGHT_MAX - WEIGHT_MIN);
-  return Math.min(WEIGHT_MAX, Math.max(WEIGHT_MIN, weight));
+  const size = SIZE_MIN + ratio * (SIZE_MAX - SIZE_MIN);
+  return Math.min(SIZE_MAX, Math.max(SIZE_MIN, size));
 }
 
 function render() {
@@ -25,7 +25,7 @@ function render() {
       container.appendChild(document.createElement("br"));
     } else {
       const span = document.createElement("span");
-      span.style.fontWeight = String(segment.weight);
+      span.style.fontSize = `${segment.size}rem`;
       span.textContent = segment.char;
       container.appendChild(span);
     }
@@ -37,8 +37,8 @@ function mountEditor(el: HTMLElement) {
   render();
 }
 
-function insertChar(char: string, weight: number) {
-  segments.push({ char, weight });
+function insertChar(char: string, size: number) {
+  segments.push({ char, size });
   render();
 }
 
@@ -52,4 +52,4 @@ function deleteLast() {
   render();
 }
 
-export { mountEditor, insertChar, insertNewline, deleteLast, pressureToWeight };
+export { mountEditor, insertChar, insertNewline, deleteLast, pressureToSize };
